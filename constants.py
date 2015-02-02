@@ -1,0 +1,34 @@
+#display constants
+SCREENWIDTH = 1280 
+SCREENHEIGHT = 960
+
+#bullet constants
+BULLET_SPEED = 10
+BULLET_WIDTH = 8
+BULLET_HEIGHT = 221
+
+#tank constants
+TANK_SPEED = 9 
+TANK_WIDTH = 64
+TANK_HEIGHT = 64
+
+#bullet types
+TANK_BULLET = 1
+ALIEN_BULLET = 2
+
+#Alien constants
+ALIEN_SPEED = 5
+ALIEN_HEIGHT = 63
+ALIEN_WIDTH = 64
+
+#Star constants
+STAR_SPEED = 3
+STAR_HEIGHT = 2
+STAR_WIDTH = 1
+
+#number of bullets
+CAP_BULLETS = 20 
+START_BULLETS = 15
+
+BOSS_WIDTH = 192
+BOSS_HEIGHT = 192
