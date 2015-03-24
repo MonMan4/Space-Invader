@@ -5,7 +5,18 @@ from tank import *
 from Alien import *
 from star import *
 from boss import*
-from random import randint 
+from highScore import*
+from random import randint
+
+
+##LargestNumber = 0
+##file = open('HighScores.txt', 'r')
+##for line in file:
+##    if line > LargestNumber:
+##            LargestNumber = line
+##            
+##print LargestNumber
+
 pygame.init()
 t = Tank()
 score = 0
@@ -19,6 +30,13 @@ screen = pygame.display.set_mode([constants.SCREENWIDTH,constants.SCREENHEIGHT])
 recharge_counter = 0
 ammo_img = pygame.image.load("assets/tank_bullet.png")
 bosses = []
+mode = "playing"
+YouLose = pygame.image.load("assets/boss.jpg")
+YouLose = pygame.transform.scale(YouLose, (constants.SCREENWIDTH, constants.SCREENHEIGHT))
+def ShowScore():
+        myfont = pygame.font.SysFont("Arial", 50)
+        label = myfont.render("Your score is: " +str(score), 1, pygame.color.THECOLORS['red'])
+        screen.blit(label, (0, 50))
 def hitAlien(b):
 	global waves_killed, score
 	for row in alien_rows:
@@ -62,22 +80,27 @@ def updateStars():
 			s.move()
 
 def updateBullets():
-	for b in bullets:
-		if b.is_offscreen():
-			bullets.remove(b)
-		elif hitAlien(b):
-			bullets.remove(b)
-		elif hitTank(b) :
-			pygame.quit()
-		else:
-			b.move()
+        global mode
+        for b in bullets:
+                if b.is_offscreen():
+                        bullets.remove(b)
+                elif hitAlien(b):
+                        bullets.remove(b)
+                elif hitTank(b) :
+                        mode = "lose"
+ #                       f = open("HighScores.txt","a") #opens file with name of "test.txt"
+ #                       f.write(str(score) + "\n")
+ #                       f.close()
+                        Highscore.write_score(score)
+                else:
+                        b.move()
 
 def updateAlieans():
-	for row in alien_rows:
-		for a in row:
-			bullet = a.update()
-	 		if bullet != None:
-				bullets.append(bullet)
+        for row in alien_rows:
+                for a in row:
+                        bullet = a.update()
+                        if bullet != None:
+                                bullets.append(bullet)
 
 def drawBullets():
 	for b in bullets:
@@ -108,47 +131,62 @@ def updateCounter():
 		del recharge_slivers[:]
 
 spawnALiens()
+
 while True:
-	spawnStars()
-	if len(alien_rows) == 0 and waves_killed < 2:
-		spawnALiens()
-	elif waves_killed == 2:
-		bosses.append(Boss(0,0))
-		waves_killed = 0
+     if mode == "playing":
+        spawnStars()
+        if len(alien_rows) == 0 and waves_killed < 2:
+                spawnALiens()
+        elif waves_killed == 2:
+                bosses.append(Boss(0,0))
+                waves_killed = 0
 
-	keys = pygame.key.get_pressed()
-	if keys[pygame.K_LEFT]:
-		t.moveLeft()
-	if keys[pygame.K_RIGHT]:
-		t.moveRight()
-	for event in pygame.event.get():
-		if event.type == pygame.QUIT:
-			pygame.quit()
-		if event.type == pygame.KEYDOWN:
-			if event.key == pygame.K_SPACE:
-				b = t.shoot()
-				if b != None: bullets.append(b)
-	updateCounter()
-	updateAlieans()
-	updateBullets()
-	updateStars()
-	screen.fill([0,0,0])
-	drawStars() 
-	screen.blit(t.image,t.rect)
-	drawBullets()
-	for row in alien_rows:
-		for a in row:
-			screen.blit(a.image,a.rect)
-	for tup in recharge_slivers:
-		pygame.draw.rect(screen,tup[1], tup[0])
-	for x in range (0,t.bullet_count()):
-		image_rect = pygame.Rect(1110 + 8*x,935,8,22)
-		screen.blit(ammo_img,image_rect)
-	for b in bosses:
-		screen.blit(b.image,b.rect)
+        keys = pygame.key.get_pressed()
+        if keys[pygame.K_LEFT]:
+                t.moveLeft()
+        if keys[pygame.K_RIGHT]:
+                t.moveRight()
+        for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                        pygame.quit()
+                if event.type == pygame.KEYDOWN:
+                        if event.key == pygame.K_SPACE:
+                                b = t.shoot()
+                                if b != None: bullets.append(b)
+        updateCounter()
+        updateAlieans()
+        updateBullets()
+        updateStars()
+        screen.fill([0,0,0])
+        drawStars() 
+        screen.blit(t.image,t.rect)
+        drawBullets()
+        for row in alien_rows:
+                for a in row:
+                        screen.blit(a.image,a.rect)
+        for tup in recharge_slivers:
+                pygame.draw.rect(screen,tup[1], tup[0])
+        for x in range (0,t.bullet_count()):
+                image_rect = pygame.Rect(1110 + 8*x,935,8,22)
+                screen.blit(ammo_img,image_rect)
+        for b in bosses:
+                screen.blit(b.image,b.rect)
+        ShowScore()
+        
+        pygame.display.update()
+        pygame.time.delay(20)
+
+     if mode == "lose":
+              screen.blit(YouLose,(0,0))
+              Highscore.get_top_scores(5)
+              num = Highscore.get_top_scores(10)
+              Highscore.show_high_scores(pygame, screen, num, 0, -40)
+              pygame.display.update()
+              pygame.time.delay(20)
+              for event in pygame.event.get():
+                      if event.type == pygame.QUIT:
+                              pygame.quit()
 
 
-
-
-	pygame.display.update()
-	pygame.time.delay(20)
+        
+        

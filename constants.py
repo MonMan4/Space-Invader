@@ -1,12 +1,11 @@
 #display constants
-SCREENWIDTH = 1280 
-SCREENHEIGHT = 960
+SCREENWIDTH = 640 
+SCREENHEIGHT = 480
 
-#bullet constants
+SCREENHEIGHT#bullet constants
 BULLET_SPEED = 10
 BULLET_WIDTH = 8
 BULLET_HEIGHT = 221
-
 #tank constants
 TANK_SPEED = 9 
 TANK_WIDTH = 64

@@ -9,8 +9,8 @@ class Tank(pygame.sprite.Sprite):
 			Tank.image = pygame.image.load("assets/spaceship.png")
 		self.image = Tank.image
 		self.rect = self.image.get_rect()
-		self.x = 320
-		self.y=875 
+		self.x = constants.SCREENWIDTH/4
+		self.y = constants.SCREENHEIGHT*.91145833333 
 		self.numBullets = constants.START_BULLETS
 		self.rect.topleft = (self.x,self.y)
 		self.speed = constants.TANK_SPEED
